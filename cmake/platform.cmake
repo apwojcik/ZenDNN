@@ -86,7 +86,6 @@ endif()
 
 if (ZENDNN_USE_LOCAL_BLIS)
     find_package(blis REQUIRED)
-    list(APPEND EXTRA_SHARED_LIBS libblis)
 endif()
 
 # The flags that can be used for the main and host compilers should be moved to

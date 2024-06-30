@@ -133,9 +133,8 @@ target_include_directories(${ZENDNN_LIBRARY_NAME} PUBLIC
     $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/${CMAKE_INSTALL_INCLUDEDIR}>
     )
 
-target_link_libraries_build(${ZENDNN_LIBRARY_NAME}
-    "${EXTRA_SHARED_LIBS};${EXTRA_STATIC_LIBS}")
-target_link_libraries_install(${ZENDNN_LIBRARY_NAME} "${EXTRA_SHARED_LIBS}")
+target_link_libraries_build(${ZENDNN_LIBRARY_NAME} libblis ${EXTRA_SHARED_LIBS} ${EXTRA_STATIC_LIBS})
+target_link_libraries_install(${ZENDNN_LIBRARY_NAME} ${EXTRA_SHARED_LIBS})
 if(ZENDNN_LIBRARY_TYPE STREQUAL "STATIC")
     target_link_libraries_install(${ZENDNN_LIBRARY_NAME} "${EXTRA_STATIC_LIBS}")
 endif()

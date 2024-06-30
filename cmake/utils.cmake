@@ -53,7 +53,7 @@ function(register_exe name srcs test)
 	string(FIND ${name} "lpgemm" check)
 	if(${check} MATCHES -1)
     add_executable(${name} ${srcs})
-    target_link_libraries(${name} ${ZENDNN_LIBRARY_NAME} ${EXTRA_SHARED_LIBS} ${ARGV3})
+    target_link_libraries(${name} PRIVATE ${ZENDNN_LIBRARY_NAME} ${EXTRA_SHARED_LIBS} ${ARGN})
     if("x${test}" STREQUAL "xtest")
         add_zendnn_test(${name} ${name})
         maybe_configure_windows_test(${name} TEST)
@@ -134,21 +134,19 @@ macro(append_to_windows_path_list path_list path)
     endif()
 endmacro()
 
-function(target_link_libraries_build target list)
+function(target_link_libraries_build target)
     # Foreach is required for compatibility with 2.8.11 ways
-    foreach(lib ${list})
-        target_link_libraries(${target} LINK_PUBLIC
-            "$<BUILD_INTERFACE:${lib}>")
-    endforeach(lib)
+    foreach(lib ${ARGN})
+        target_link_libraries(${target} PUBLIC $<BUILD_INTERFACE:${lib}>)
+    endforeach()
 endfunction()
 
-function(target_link_libraries_install target list)
+function(target_link_libraries_install target)
     # Foreach is required for compatibility with 2.8.11 ways
-    foreach(lib ${list})
+    foreach(lib ${ARGN})
         get_filename_component(base "${lib}" NAME)
-        target_link_libraries(${target} LINK_PUBLIC
-            "$<INSTALL_INTERFACE:${base}>")
-    endforeach(lib)
+        target_link_libraries(${target} PUBLIC $<INSTALL_INTERFACE:${base}>)
+    endforeach()
 endfunction()
 
 function(find_libm var)
