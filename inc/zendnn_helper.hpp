@@ -240,7 +240,7 @@ class zendnnEnv {
         }
 
         epos = pos+ namePlusColon.size();
-        long x;
+        long long x;
         char *ep;
         if (epos >= algoStr.size()) {
             assert(epos == algoStr.size());
@@ -822,7 +822,7 @@ extern "C" {
         const int out_width,
         const int no_of_filter,
         const int total_filters,
-        unsigned long biasOffset,
+        unsigned long long biasOffset,
         const float *bias,
         const bool relu,
         const int gelu,
@@ -839,7 +839,7 @@ extern "C" {
         zendnn::zendnnEnv zenEnvObj,
         float *out_layer,
         float upperbound,
-        unsigned long size
+        unsigned long long size
     );
 
     void zenMatmulSplit(

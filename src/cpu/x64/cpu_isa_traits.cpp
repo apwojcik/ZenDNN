@@ -307,8 +307,8 @@ namespace {
 #define ARCH_REQ_XCOMP_PERM 0x1023
 
 bool init() {
-    unsigned long bitmask = 0;
-    long status = syscall(SYS_arch_prctl, ARCH_GET_XCOMP_PERM, &bitmask);
+    unsigned long long bitmask = 0;
+    long long status = syscall(SYS_arch_prctl, ARCH_GET_XCOMP_PERM, &bitmask);
     if (0 != status) return false;
     if (bitmask & XFEATURE_MASK_XTILEDATA) return true;
 

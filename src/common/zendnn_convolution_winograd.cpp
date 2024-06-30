@@ -192,7 +192,7 @@ void input_transform_2x2_3x3(zendnnEnv zenEnvObj, const float *input,
                 float BTx[4][4][8];
                 int th = h + pad_t;
                 int tw = w + pad_l;
-                unsigned long t = (unsigned long)n * num_tiles_per_image +
+                unsigned long long t = (unsigned long)n * num_tiles_per_image +
                                   (th / 2) * num_tiles_per_row +
                                   (tw / 2); //tile_counter
                 const float *TI = input + (unsigned long)n * height * width * num_channels;
@@ -449,7 +449,7 @@ void out_transform_2x2_3x3(zendnnEnv zenEnvObj, float *tiled_input,
             for (w = 0; w < output_width; w+=2) {
                 float ATm[2][4][8];
                 int c, ci, i, j;
-                unsigned long tile_counter = (unsigned long)n * num_tiles_per_image +
+                unsigned long long tile_counter = (unsigned long)n * num_tiles_per_image +
                                              (h / 2) * num_tiles_per_row +
                                              (w / 2);
                 const float *I = tiled_input + tile_counter * TW * TW * num_channels;
@@ -566,7 +566,7 @@ void post_conv_transform(const int batch_size, const int output_height,
                          const float *bias, const bool relu, const float *scale) {
 
     int m;
-    const unsigned long  total_size = (unsigned long)batch_size * output_height *
+    const unsigned long long  total_size = (unsigned long)batch_size * output_height *
                                       output_width * num_channels;
 
     // move if conditions outside for better performance
@@ -639,17 +639,17 @@ void winograd_2x2_3x3(
     const int P = num_images * std::ceil(out_height * 0.5) * std::ceil(
                       out_width * 0.5);
 
-    static unsigned long MAX_IMAGE_TILES = (unsigned long)(P+1) * 4 * 4 *
+    static unsigned long long MAX_IMAGE_TILES = (unsigned long)(P+1) * 4 * 4 *
                                            num_channels; // initialization happens only once
-    static unsigned long MAX_FILTER_TILES = (unsigned long)(
+    static unsigned long long MAX_FILTER_TILES = (unsigned long)(
             num_filters+1) * 4 * 4 * num_channels;
-    static unsigned long MAX_OUTPUT_TILES = (unsigned long)(
+    static unsigned long long MAX_OUTPUT_TILES = (unsigned long)(
             P+1) * 4 * 4 * num_filters;
 
-    unsigned long current_image_tiles = (unsigned long)(P+1) * 4 * 4 * num_channels;
-    unsigned long current_filter_tiles = (unsigned long)(num_filters+1) * 4 * 4 *
+    unsigned long long current_image_tiles = (unsigned long)(P+1) * 4 * 4 * num_channels;
+    unsigned long long current_filter_tiles = (unsigned long)(num_filters+1) * 4 * 4 *
                                          num_channels;
-    unsigned long current_output_tiles = (unsigned long)(P+1) * 4 * 4 * num_filters;
+    unsigned long long current_output_tiles = (unsigned long)(P+1) * 4 * 4 * num_filters;
 
     float *transformed_image = NULL;
     float *transformed_filter = NULL;

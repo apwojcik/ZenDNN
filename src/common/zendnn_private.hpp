@@ -1095,16 +1095,16 @@ extern "C"
 
     void im2row_unrool_3x3(
         float *data_col_tmp,
-        unsigned long data_col_offset,
+        unsigned long long data_col_offset,
         const float *in_layer,
-        unsigned long offset
+        unsigned long long offset
     );
 
     void im2row_unrool_7x3(
         float *data_col_tmp,
-        unsigned long data_col_offset,
+        unsigned long long data_col_offset,
         const float *in_layer,
-        unsigned long offset
+        unsigned long long offset
     );
 }
 

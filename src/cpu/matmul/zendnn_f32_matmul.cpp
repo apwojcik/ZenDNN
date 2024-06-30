@@ -250,8 +250,8 @@ static void calculate_offsets(std::vector<int> &offsets,
                               int64_t const dims1[],
                               int64_t const dims2[],
                               unsigned int dims_len,
-                              unsigned long mat_dim1,
-                              unsigned long mat_dim2) {
+                              unsigned long long mat_dim1,
+                              unsigned long long mat_dim2) {
     fill_offset(offsets, 0, -1*mat_dim1*mat_dim2, dims1, dims2, dims_len, 0,
                 mat_dim1*mat_dim2);
     return;

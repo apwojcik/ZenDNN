@@ -627,8 +627,8 @@ void NHWC2NCHW(const float *nhwc_data, int N, int C, int H, int W,
 }
 
 //Unrool im2row for kernel_width=3 and input_channel=3
-void im2row_unrool_3x3(float *data_col_tmp, unsigned long data_col_offset,
-                       const float *in_layer, unsigned long offset) {
+void im2row_unrool_3x3(float *data_col_tmp, unsigned long long data_col_offset,
+                       const float *in_layer, unsigned long long offset) {
 
     data_col_tmp[data_col_offset + 0] = in_layer[offset + 0];
     data_col_tmp[data_col_offset + 1] = in_layer[offset + 1];
@@ -642,8 +642,8 @@ void im2row_unrool_3x3(float *data_col_tmp, unsigned long data_col_offset,
 }
 
 //Unrool im2row for kernel_width=7 and input_channel=3
-void im2row_unrool_7x3(float *data_col_tmp, unsigned long data_col_offset,
-                       const float *in_layer, unsigned long offset) {
+void im2row_unrool_7x3(float *data_col_tmp, unsigned long long data_col_offset,
+                       const float *in_layer, unsigned long long offset) {
 
     data_col_tmp[data_col_offset + 0] = in_layer[offset + 0];
     data_col_tmp[data_col_offset + 1] = in_layer[offset + 1];

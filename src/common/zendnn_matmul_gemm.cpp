@@ -798,7 +798,7 @@ void zenBatchMatMulSplitV1(zendnnEnv zenEnvObj, bool Layout,
     for (int i=0; i<group_count; i++) {
         bool transpose_input = (TransA_Array[i] == CblasNoTrans)?0:1;
         bool transpose_filter = (TransB_Array[i] == CblasNoTrans)?0:1;
-        unsigned long m = M_Array[i];
+        unsigned long long m = M_Array[i];
         unsigned long n = N_Array[i];
         unsigned long k = K_Array[i];
 

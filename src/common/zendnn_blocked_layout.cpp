@@ -66,7 +66,7 @@ void zenConvolution2D_Latency_blocked_layout(
     int w_offset = kernel_h * kernel_w * no_of_filter;
     int o_h_w    = out_height*out_width;
 
-    unsigned long data_col_size = ((kernel_h*kernel_w*channels)*(out_height*out_width)*sizeof(float)*no_of_images);
+    unsigned long long data_col_size = ((kernel_h*kernel_w*channels)*(out_height*out_width)*sizeof(float)*no_of_images);
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size : (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
     float *data_col = (float *)zendnn_aligned_alloc(ALIGNED_OFFSET, data_col_size);
 
@@ -163,9 +163,9 @@ void zenConvolution2D_Filterwise_Latency(
     zendnnVerbose(ZENDNN_ALGOLOG, "zenConvolution2D_Filterwise_Latency [zendnn convolution Filter parallelization]");
 
     unsigned int thread_qty = zenEnvObj.omp_num_threads;
-    unsigned long data_col_size = ((kernel_h*kernel_w*channels)*(out_height*out_width)*sizeof(float)*no_of_images);
-    unsigned long filter_col_size = ((kernel_h*kernel_w*channels*no_of_filter)*sizeof(float));
-    unsigned long o_layer_size = ((no_of_filter)*(out_height*out_width)*sizeof(float)*no_of_images);
+    unsigned long long data_col_size = ((kernel_h*kernel_w*channels)*(out_height*out_width)*sizeof(float)*no_of_images);
+    unsigned long long filter_col_size = ((kernel_h*kernel_w*channels*no_of_filter)*sizeof(float));
+    unsigned long long o_layer_size = ((no_of_filter)*(out_height*out_width)*sizeof(float)*no_of_images);
 
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size : (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
     o_layer_size = (o_layer_size%ALIGNED_OFFSET == 0) ?  o_layer_size : (o_layer_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
@@ -216,8 +216,8 @@ void zenConvolution2D_Filterwise_Latency(
 
     // GEMM calls to implement parallel filter convolution
     for (int i=0; i<no_of_images; i++) {
-        unsigned long bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * i);
-        unsigned long inputOffset = channels*height*width*i;
+        unsigned long long bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * i);
+        unsigned long long inputOffset = channels*height*width*i;
         im2rowNHWC_par(in_layer + inputOffset, channels, height, width, kernel_h, kernel_w, pad_t, pad_l, pad_b, pad_r, stride_h, stride_w, data_col + bufferOffset);
         int w_offset = kernel_h * kernel_w * channels;
         int o_h_w    = out_height*out_width;

@@ -97,7 +97,7 @@ class blis_expert {
 typedef struct zenLibBufState {
     float               *zenLibBufPtr;
     int                 zenLibBufPtrStatus;
-    unsigned long       zenLibBufSize;
+    unsigned long long       zenLibBufSize;
 } zenLibBufPool;
 
 
@@ -177,7 +177,7 @@ class ZenLibMemoryPool {
     int            max_size_enable;
 
     //max size of allocated buffers in the pool
-    unsigned long     max_size;
+    unsigned long long     max_size;
 
     //Get Memory pool pointer from Global array of memory pool based on index
     //Create ZenMemPool object, if not created corresponding to that index
@@ -227,7 +227,7 @@ class ZenLibMemoryPool {
     //Acquire buffer from the given pool object. If pool is not
     //  initialized or buffer is not free, create buffer and
     //  add to the pool.
-    int acquireZenLibPoolBuf(float **output, unsigned long out_size, int outlinks) {
+    int acquireZenLibPoolBuf(float **output, unsigned long long out_size, int outlinks) {
 
         int return_flag = 0;
         #pragma omp critical
@@ -248,7 +248,7 @@ class ZenLibMemoryPool {
 
                     //Go to next free buffer when out_size is more
                     //  than buffer_size of pool at given offset.
-                    unsigned long buffer_size = zenLibBufPoolArr[i].zenLibBufSize;
+                    unsigned long long buffer_size = zenLibBufPoolArr[i].zenLibBufSize;
                     if (out_size > buffer_size) {
                         zenLibBufPoolArr[i].zenLibBufPtr = (float *) realloc(
                                                                zenLibBufPoolArr[i].zenLibBufPtr, out_size);
@@ -285,7 +285,7 @@ class ZenLibMemoryPool {
                 }
                 else {
                     unsigned int poolOffset = zenLibBufPoolSize;
-                    unsigned long size;
+                    unsigned long long size;
 
                     //Set max_size based on current layer output dimension
                     //  and ZEN_LIB_BUF_SIZE_FACTOR, Most of the cases Output

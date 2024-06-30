@@ -86,7 +86,7 @@ static inline int zendnnGetLogLevel(const std::string &name) {
     }
 
     epos = pos+ namePlusColon.size();
-    long x;
+    long long x;
     char *ep;
     if (epos >= logStr.size()) {
         assert(epos == logStr.size());

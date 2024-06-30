@@ -1975,7 +1975,7 @@ void zenConvolution2Dbase(
         thread_qty = images;
     }
 
-    unsigned long data_col_size = ((unsigned long)(kernel_h*kernel_w*channels)*
+    unsigned long long data_col_size = ((unsigned long)(kernel_h*kernel_w*channels)*
                                    (out_height*out_width)*sizeof(float)*thread_qty);
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size :
                     (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
@@ -1996,7 +1996,7 @@ void zenConvolution2Dbase(
             if (threadOffset >= images) {
                 break;
             }
-            unsigned long inputOffset = ((unsigned long)channels*height*width*threadOffset);
+            unsigned long long inputOffset = ((unsigned long)channels*height*width*threadOffset);
             unsigned long patchInputOffset = ((unsigned long)(kernel_h*kernel_w*channels)*
                                               (out_height*out_width) * omp_get_thread_num());
             unsigned long outputOffset = ((unsigned long)no_of_filter*

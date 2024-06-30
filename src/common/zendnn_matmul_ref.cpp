@@ -105,7 +105,7 @@ void zenMatMul_ref(
 
     // For activation (currently ReLU only) fusion
     if (relu) {
-        long int out_values = m*n;
+        long long int out_values = m*n;
         #pragma omp parallel for num_threads(thread_qty)
         for (long int i=0; i<out_values; i++) {
             if (0 > output[i]) {

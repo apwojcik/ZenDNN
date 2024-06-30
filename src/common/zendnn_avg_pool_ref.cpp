@@ -87,9 +87,9 @@ void avgPoolingRefV1(
                     if (threadOffset >= number_of_images) {
                         break;
                     }
-                    unsigned long inputOffset = (unsigned long)
+                    unsigned long long inputOffset = (unsigned long)
                                                 height*width*number_of_channel*threadOffset;
-                    unsigned long outputOffset =
+                    unsigned long long outputOffset =
                         (unsigned long)height_col*width_col*number_of_channel*threadOffset;
 
                     float *tmp_output;

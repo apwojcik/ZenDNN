@@ -72,10 +72,10 @@ void avg_pooling_v1(
                             for (int kernel_j = 0; kernel_j < kernel_width; kernel_j++) {
                                 if (! padding_zone(left_h+kernel_i, left_w+kernel_j, width, height,
                                                    padding_width_left, padding_height_top)) {
-                                    unsigned long left_index = (unsigned long)n * (number_of_channel*height*width) +
+                                    unsigned long long left_index = (unsigned long)n * (number_of_channel*height*width) +
                                                                c * (height*width) +
                                                                (left_h-padding_height_top) *(width) + (left_w-padding_width_left);
-                                    unsigned long current_index = left_index + kernel_j + kernel_i * width;
+                                    unsigned long long current_index = left_index + kernel_j + kernel_i * width;
                                     avg += input[current_index];
                                 }
                             }
@@ -121,9 +121,9 @@ void avg_pooling_v1(
                     if (threadOffset >= number_of_images) {
                         break;
                     }
-                    unsigned long inputOffset = (unsigned long)
+                    unsigned long long inputOffset = (unsigned long)
                                                 height*width*number_of_channel*threadOffset;
-                    unsigned long outputOffset =
+                    unsigned long long outputOffset =
                         (unsigned long)height_col*width_col*number_of_channel*threadOffset;
 
                     float *tmp_output;

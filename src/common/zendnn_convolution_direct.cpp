@@ -77,7 +77,7 @@ void zenConvolution2D_direct(
         thread_qty = no_of_images;
     }
 
-    unsigned long data_col_size = ((kernel_h*kernel_w*channels)*sizeof(
+    unsigned long long data_col_size = ((kernel_h*kernel_w*channels)*sizeof(
                                        float)*thread_qty);
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size :
                     (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
@@ -106,10 +106,10 @@ void zenConvolution2D_direct(
             if (threadOffset >= no_of_images) {
                 break;
             }
-            unsigned long inputOffset = ((unsigned long)channels*height*width*threadOffset);
-            unsigned long patchInputOffset = ((kernel_h*kernel_w*channels) *
+            unsigned long long inputOffset = ((unsigned long)channels*height*width*threadOffset);
+            unsigned long long patchInputOffset = ((kernel_h*kernel_w*channels) *
                                               omp_get_thread_num());
-            unsigned long outputOffset = ((unsigned long)no_of_filter*
+            unsigned long long outputOffset = ((unsigned long)no_of_filter*
                                           (out_height*out_width)* threadOffset);
 
             float *data_col_tmp = data_col + patchInputOffset;
@@ -222,8 +222,8 @@ void zenConvolution2D_directVer2(
         thread_qty = no_of_images;
     }
 
-    //unsigned long data_col_size = ((kernel_h*kernel_w*channels)*sizeof(float)*thread_qty);
-    unsigned long data_col_size = (channels)*sizeof(float)*thread_qty;
+    //unsigned long long data_col_size = ((kernel_h*kernel_w*channels)*sizeof(float)*thread_qty);
+    unsigned long long data_col_size = (channels)*sizeof(float)*thread_qty;
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size :
                     (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
     float *data_col = (float *)zendnn_aligned_alloc(ALIGNED_OFFSET, data_col_size);
@@ -252,10 +252,10 @@ void zenConvolution2D_directVer2(
             if (threadOffset >= no_of_images) {
                 break;
             }
-            unsigned long inputOffset = (channels*height*width*threadOffset);
-            unsigned long patchInputOffset = ((channels) * omp_get_thread_num());
-            //unsigned long directOutOffset = ((no_of_filter) * omp_get_thread_num());
-            unsigned long outputOffset = (no_of_filter* (out_height*out_width)*
+            unsigned long long inputOffset = (channels*height*width*threadOffset);
+            unsigned long long patchInputOffset = ((channels) * omp_get_thread_num());
+            //unsigned long long directOutOffset = ((no_of_filter) * omp_get_thread_num());
+            unsigned long long outputOffset = (no_of_filter* (out_height*out_width)*
                                           threadOffset);
 
             unsigned int data_col_offset = 0;
@@ -371,8 +371,8 @@ void zenConvolution2D_directVer3(
         thread_qty = no_of_images;
     }
 
-    //unsigned long data_col_size = ((kernel_h*kernel_w*channels)*sizeof(float)*thread_qty);
-    unsigned long data_col_size = (channels)*sizeof(float)*thread_qty;
+    //unsigned long long data_col_size = ((kernel_h*kernel_w*channels)*sizeof(float)*thread_qty);
+    unsigned long long data_col_size = (channels)*sizeof(float)*thread_qty;
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size :
                     (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
     float *data_col = (float *)zendnn_aligned_alloc(ALIGNED_OFFSET, data_col_size);
@@ -399,10 +399,10 @@ void zenConvolution2D_directVer3(
             if (threadOffset >= no_of_images) {
                 break;
             }
-            unsigned long inputOffset = (channels*height*width*threadOffset);
-            unsigned long patchInputOffset = ((channels) * omp_get_thread_num());
-            //unsigned long directOutOffset = ((no_of_filter) * omp_get_thread_num());
-            unsigned long outputOffset = (no_of_filter* (out_height*out_width)*
+            unsigned long long inputOffset = (channels*height*width*threadOffset);
+            unsigned long long patchInputOffset = ((channels) * omp_get_thread_num());
+            //unsigned long long directOutOffset = ((no_of_filter) * omp_get_thread_num());
+            unsigned long long outputOffset = (no_of_filter* (out_height*out_width)*
                                           threadOffset);
 
             unsigned int data_col_offset = 0;

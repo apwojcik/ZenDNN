@@ -83,7 +83,7 @@ void zenConvolution2D_ver2(
     //if(no_of_images > cpuVitualCores)
     //  bufferBucket = cpuVitualCores;
 
-    unsigned long size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
+    unsigned long long size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
                          thread_qty;
     float *data_col = (float *)malloc(size * sizeof(float));
     if (data_col == NULL) {
@@ -101,10 +101,10 @@ void zenConvolution2D_ver2(
                 break;
             }
             //unsigned int bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * threadOffset);
-            unsigned long bufferOffset = ((kernel_h*kernel_w*channels)*
+            unsigned long long bufferOffset = ((kernel_h*kernel_w*channels)*
                                           (out_height*out_width) * omp_get_thread_num());
 
-            unsigned long outBufferOffset = (no_of_filter* (out_height*out_width)*
+            unsigned long long outBufferOffset = (no_of_filter* (out_height*out_width)*
                                              threadOffset);
 
             //im2col_par(in_layer+(channels*height*width*i), channels, height, width, kernel_h, kernel_w, pad_h, pad_w, stride_h, stride_w, data_col + ((kernel_h*kernel_w*channels)*(out_height*out_width)) * threadOffset);
@@ -184,10 +184,10 @@ void convolution2D_ver3(
     //#New Implementation with im2col and gemm function.
     //im2col().....parallel version is also available
     //unsigned int  size = (kernel_h*kernel_w*channels)*(out_height*out_width) * no_of_images;
-    unsigned long  filterMatrixSize = (kernel_h*kernel_w*no_of_filter) * channels;
+    unsigned long long  filterMatrixSize = (kernel_h*kernel_w*no_of_filter) * channels;
     float *filter_row = (float *)malloc(filterMatrixSize * sizeof(float));
 
-    unsigned long  outMatrixSize = (kernel_h*kernel_w*no_of_filter)* (height*width);
+    unsigned long long  outMatrixSize = (kernel_h*kernel_w*no_of_filter)* (height*width);
     float *outMatrix = (float *)malloc(outMatrixSize * sizeof(float));
     float *outMatrixNew = (float *)malloc(no_of_filter * height*width * sizeof(
             float));
@@ -211,8 +211,8 @@ void convolution2D_ver3(
                 break;
             }
             //unsigned int bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * threadOffset);
-            unsigned  long bufferOffset = ((height*width*channels) * threadOffset);
-            unsigned long outBufferOffset = (no_of_filter* (out_height*out_width)*
+            unsigned  long long bufferOffset = ((height*width*channels) * threadOffset);
+            unsigned long long outBufferOffset = (no_of_filter* (out_height*out_width)*
                                              threadOffset);
 
 
@@ -288,7 +288,7 @@ void zenConvolution2D_ver4(
     //if(no_of_images > cpuVitualCores)
     //  bufferBucket = cpuVitualCores;
 
-    unsigned long  size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
+    unsigned long long  size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
                           no_of_images;
     float *data_col = (float *)malloc(size * sizeof(float));
     if (data_col == NULL) {
@@ -307,9 +307,9 @@ void zenConvolution2D_ver4(
             if (threadOffset >= no_of_images) {
                 break;
             }
-            unsigned long bufferOffset = ((kernel_h*kernel_w*channels)*
+            unsigned long long bufferOffset = ((kernel_h*kernel_w*channels)*
                                           (out_height*out_width) * threadOffset);
-            unsigned long inputOffset = (channels*height*width*threadOffset);
+            unsigned long long inputOffset = (channels*height*width*threadOffset);
             //unsigned int bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * omp_get_thread_num());
             //unsigned int outBufferOffset = (no_of_filter* (out_height*out_width)* threadOffset);
 
@@ -338,7 +338,7 @@ void zenConvolution2D_ver4(
             if (threadOffset >= no_of_images) {
                 break;
             }
-            unsigned long outBufferOffset = (no_of_filter* (out_height*out_width)*
+            unsigned long long outBufferOffset = (no_of_filter* (out_height*out_width)*
                                              threadOffset);
 
             //Below Bias and activation code can be eliminated if not required
@@ -415,7 +415,7 @@ void zenConvolution2D_ver5(
     //if(no_of_images > cpuVitualCores)
     //  bufferBucket = cpuVitualCores;
 
-    unsigned long  size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
+    unsigned long long  size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
                           thread_qty;
     float *data_col = (float *)malloc(size * sizeof(float));
     if (data_col == NULL) {
@@ -438,7 +438,7 @@ void zenConvolution2D_ver5(
             outBatchSize = no_of_images - ((no_of_images/thread_qty) * thread_qty);
         }
 
-        unsigned long outBufferOffset = (no_of_filter* (out_height*out_width)*
+        unsigned long long outBufferOffset = (no_of_filter* (out_height*out_width)*
                                          thread_qty * i);
         #pragma omp parallel num_threads(thread_qty)
         {
@@ -446,9 +446,9 @@ void zenConvolution2D_ver5(
             //outBufferOffset = (no_of_filter* (out_height*out_width)* tmpBufferSize * i);
             if (threadOffset < no_of_images) {
                 //         break;
-                unsigned long bufferOffset = ((kernel_h*kernel_w*channels)*
+                unsigned long long bufferOffset = ((kernel_h*kernel_w*channels)*
                                               (out_height*out_width) * omp_get_thread_num());
-                unsigned long inputOffset = (channels*height*width*threadOffset);
+                unsigned long long inputOffset = (channels*height*width*threadOffset);
                 //unsigned int bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * omp_get_thread_num());
 
 
@@ -556,7 +556,7 @@ void zenConvolution2D_ver6(
     //if(no_of_images > cpuVitualCores)
     //  bufferBucket = cpuVitualCores;
 
-    unsigned long  size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
+    unsigned long long  size = (kernel_h*kernel_w*channels)*(out_height*out_width) *
                           thread_qty;
     float *data_col = (float *)malloc(size * sizeof(float));
     if (data_col == NULL) {
@@ -574,7 +574,7 @@ void zenConvolution2D_ver6(
             outBatchSize = no_of_images - ((no_of_images/thread_qty) * thread_qty);
         }
 
-        unsigned long outBufferOffset = (no_of_filter* (out_height*out_width)*
+        unsigned long long outBufferOffset = (no_of_filter* (out_height*out_width)*
                                          thread_qty * i);
         #pragma omp parallel num_threads(thread_qty)
         {
@@ -582,9 +582,9 @@ void zenConvolution2D_ver6(
             //outBufferOffset = (no_of_filter* (out_height*out_width)* tmpBufferSize * i);
             if (threadOffset < no_of_images) {
                 //         break;
-                unsigned long bufferOffset = ((kernel_h*kernel_w*channels)*
+                unsigned long long bufferOffset = ((kernel_h*kernel_w*channels)*
                                               (out_height*out_width) * omp_get_thread_num());
-                unsigned long inputOffset = (channels*height*width*threadOffset);
+                unsigned long long inputOffset = (channels*height*width*threadOffset);
                 //unsigned int bufferOffset = ((kernel_h*kernel_w*channels)*(out_height*out_width) * omp_get_thread_num());
 
 
@@ -731,7 +731,7 @@ void zenConvolution2DbaseRef(
         thread_qty = no_of_images;
     }
 
-    unsigned long data_col_size = ((unsigned long)(kernel_h*kernel_w*channels)*
+    unsigned long long data_col_size = ((unsigned long)(kernel_h*kernel_w*channels)*
                                    (out_height*out_width)*sizeof(float)*thread_qty);
     data_col_size = (data_col_size%ALIGNED_OFFSET == 0) ?  data_col_size :
                     (data_col_size/ALIGNED_OFFSET)*ALIGNED_OFFSET + (ALIGNED_OFFSET);
@@ -753,7 +753,7 @@ void zenConvolution2DbaseRef(
             if (threadOffset >= no_of_images) {
                 break;
             }
-            unsigned long inputOffset = ((unsigned long)channels*height*width*threadOffset);
+            unsigned long long inputOffset = ((unsigned long)channels*height*width*threadOffset);
             unsigned long patchInputOffset = ((unsigned long)(kernel_h*kernel_w*channels)*
                                               (out_height*out_width) * omp_get_thread_num());
             unsigned long outputOffset = ((unsigned long)no_of_filter*
