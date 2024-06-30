@@ -19,7 +19,7 @@
 # limitations under the License.
 #===============================================================================
 
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.15)
 
 if(POLICY CMP0022)
     cmake_policy(SET CMP0022 NEW)
@@ -75,16 +75,7 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "")
         "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel RelWithAssert RelWithMDd...")
 endif()
 
-set(PROJECT_NAME "ZenDNN")
-set(PROJECT_FULL_NAME "Zen Deep Neural Network Library (ZenDNN)")
-set(PROJECT_VERSION "4.1.0")
-
-if (CMAKE_VERSION VERSION_LESS 3.0)
-    project(${PROJECT_NAME} C CXX)
-else()
-    cmake_policy(SET CMP0048 NEW)
-    project(${PROJECT_NAME} VERSION "${PROJECT_VERSION}" LANGUAGES C CXX)
-endif()
+project("ZenDNN" VERSION 4.2 LANGUAGES C CXX DESCRIPTION "Zen Deep Neural Network Library (ZenDNN)")
 
 if (NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     message(FATAL_ERROR "oneDNN supports 64 bit platforms only")
@@ -160,11 +151,6 @@ configure_file(
 )
 include_directories_with_host_compiler(${PROJECT_BINARY_DIR}/inc)
 
-configure_file(
-    "${PROJECT_SOURCE_DIR}/README.binary.in"
-    "${PROJECT_BINARY_DIR}/README"
-)
-
 if(ZENDNN_INSTALL_MODE STREQUAL "BUNDLE" AND NOT DEFINED CMAKE_INSTALL_LIBDIR)
     # define CMAKE_INSTALL_LIBDIR as "lib" in the case of bundle
     set(CMAKE_INSTALL_LIBDIR "lib")
@@ -178,12 +164,9 @@ add_subdirectory(src)
 add_subdirectory(tests)
 
 if(ZENDNN_INSTALL_MODE STREQUAL "BUNDLE")
-    install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_PREFIX})
-    install(FILES THIRD-PARTY-PROGRAMS DESTINATION ${CMAKE_INSTALL_PREFIX})
-    install(FILES ${PROJECT_BINARY_DIR}/README DESTINATION ${CMAKE_INSTALL_PREFIX})
+    set(ZENDNN_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 else()
-    # Cannot use CMAKE_INSTALL_DOCDIR since it uses PROJECT_NAME and not ZENDNN_LIBRARY_NAME
-    install(FILES LICENSE DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${ZENDNN_LIBRARY_NAME})
-    install(FILES THIRD-PARTY-PROGRAMS DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${ZENDNN_LIBRARY_NAME})
-    install(FILES ${PROJECT_BINARY_DIR}/README DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/doc/${ZENDNN_LIBRARY_NAME})
+    set(ZENDNN_INSTALL_PREFIX ${CMAKE_INSTALL_DATAROOTDIR}/doc/${ZENDNN_LIBRARY_NAME})
 endif()
+
+install(FILES LICENSE THIRD-PARTY-PROGRAMS DESTINATION ${ZENDNN_INSTALL_PREFIX})

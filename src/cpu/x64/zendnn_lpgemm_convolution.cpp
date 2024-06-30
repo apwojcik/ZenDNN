@@ -709,12 +709,7 @@ const {
         }
     }
 
-#ifdef _WIN32
     auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
 
     if (supportedPath == -1) {
         zendnnInfo(ZENDNN_CORELOG,
@@ -848,15 +843,9 @@ const {
     }
 
     // Code for time profiling of this kernel
-    float elapsed;
-#ifdef _WIN32
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> difference = end - start;
-    elapsed = difference.count();
-#else
-    gettimeofday(&end, 0);
-    elapsed = timedifference_msec(start, end);
-#endif
+    float elapsed = difference.count();
 
     zendnnVerbose(ZENDNN_PROFLOG, "zendnn_LPGEMM auto_tuner=",
                   zendnn_lpgemm_algo == 0 ?1:0,"algo=", jcp.alg_kind, " mb=",jcp.mb, " ih=",

@@ -59,12 +59,6 @@ void zenConvolution2D_Latency_blocked_layout(
 ) {
     zendnnVerbose(ZENDNN_ALGOLOG, "zenConvolution2D_Latency_blocked_layout [zendnn convolution blocked]");
     unsigned int thread_qty = zenEnvObj.omp_num_threads;
-#ifdef _WIN32
-    auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
 
     int channel_group =  8;    // Modified hardcoding of 8 based on thread quantity in future
     int remainder = channels % channel_group;

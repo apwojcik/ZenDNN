@@ -96,6 +96,8 @@ endif()
 
 set(OBJ_LIB ${ZENDNN_LIBRARY_NAME}_cpu)
 add_library(${OBJ_LIB} OBJECT ${SOURCES})
+target_include_directories(${OBJ_LIB} PRIVATE ${PROJECT_SOURCE_DIR}/src/common)
+target_link_libraries(${OBJ_LIB} PRIVATE libblis)
 set_property(GLOBAL APPEND PROPERTY ZENDNN_LIB_DEPS
     $<TARGET_OBJECTS:${OBJ_LIB}>)
 

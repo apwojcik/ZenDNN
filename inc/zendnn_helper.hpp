@@ -32,6 +32,11 @@
     #include <sys/time.h>
 #endif
 
+#ifdef _MSC_VER
+// the Microsoft C/C++ compiler does not support
+#define omp_set_max_active_levels(_n)
+#endif
+
 inline void *zendnn_aligned_alloc(size_t _Alignment, size_t _Size) {
 #ifdef _WIN32
     return _aligned_malloc(_Size, _Alignment);

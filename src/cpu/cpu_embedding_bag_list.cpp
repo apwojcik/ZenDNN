@@ -31,26 +31,30 @@ using namespace zendnn::impl::prop_kind;
 // clang-format off
 const std::map<pk_dt_impl_key_t, std::vector<impl_list_item_t>> &impl_list_map() {
     static const std::map<pk_dt_impl_key_t, std::vector<impl_list_item_t>> the_map =
-    REG_EMBEDDING_BAG_P({
-            { {forward, f32, s32, f32}, {
+#if BUILD_PRIMITIVE_ALL || BUILD_EMBEDDING_BAG
+    {
+        { {forward, f32, s32, f32}, {
 #if AVX512_EB_EN
-                    CPU_INSTANCE(avx512_embedding_bag_t<f32>)
+                CPU_INSTANCE(avx512_embedding_bag_t<f32>)
 #endif
-                    CPU_INSTANCE(avx2_embedding_bag_t<f32>)
-                    CPU_INSTANCE(ref_embedding_bag_t<f32>)
-                    /* eol */
-                    nullptr,
-                }
-            },
+                CPU_INSTANCE(avx2_embedding_bag_t<f32>)
+                CPU_INSTANCE(ref_embedding_bag_t<f32>)
+                /* eol */
+                nullptr,
+            }
+        },
             { {forward, s16, s32, f32}, {
 #if AVX512_EB_EN
-                    CPU_INSTANCE(avx512_embedding_bag_t<s16>)
+                CPU_INSTANCE(avx512_embedding_bag_t<s16>)
 #endif
-                    /* eol */
-                    nullptr,
-                }
-            },
-        });
+                /* eol */
+                nullptr,
+            }
+        },
+    };
+#else
+    {};
+#endif
     return the_map;
 }
 // clang-format on

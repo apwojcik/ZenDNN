@@ -507,12 +507,7 @@ void zenMatMul_gemm_wrapper(
     bool auto_tuner=false;
     unsigned int algo_type = zenEnvObj.zenGEMMalgo;
     // prologue code for time profiling of this kernel
-#ifdef _WIN32
     auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
 
     //Experimental version for auto tuner
     if (zenEnvObj.zenGEMMalgo==zenMatMulAlgoType::MATMUL_AUTO) {
@@ -540,15 +535,9 @@ void zenMatMul_gemm_wrapper(
                        alpha, input, lda, filter, ldb, bias, relu, gelu, beta, output, ldc);
     }
     // Code for time profiling of this kernel
-    float elapsed;
-#ifdef _WIN32
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> difference = end - start;
-    elapsed = difference.count();
-#else
-    gettimeofday(&end, 0);
-    elapsed = timedifference_msec(start, end);
-#endif
+    float elapsed = difference.count();
 
     zendnnVerbose(ZENDNN_PROFLOG, "zenMatMul_gemm auto_tuner=", auto_tuner,
                   " Layout=",
@@ -1087,28 +1076,28 @@ void zenBatchMatMulPrimitive(zendnnEnv zenEnvObj, bool Layout,
     long N = N_Array[0];
     long K = K_Array[0];
 
-    memory::dims src_dims = (group_size[0] == 1) ? (memory::dims) {
+    memory::dims src_dims = (group_size[0] == 1) ? memory::dims {
         M, K
 } :
-    (memory::dims) {
+    memory::dims {
         batch_size, group_size[0]/batch_size, M, K
     };
-    memory::dims weight_dims = (group_size[0] == 1) ? (memory::dims) {
+    memory::dims weight_dims = (group_size[0] == 1) ? memory::dims {
         K, N
 } :
-    (memory::dims) {
+    memory::dims {
         batch_size, group_size[0]/batch_size, K, N
     };
-    memory::dims dst_dims = (group_size[0] == 1) ? (memory::dims) {
+    memory::dims dst_dims = (group_size[0] == 1) ? memory::dims {
         M, N
 } :
-    (memory::dims) {
+    memory::dims {
         batch_size, group_size[0]/batch_size, M, N
     };
-    memory::dims bias_dims = (group_size[0] == 1) ? (memory::dims) {
+    memory::dims bias_dims = (group_size[0] == 1) ? memory::dims {
         1, N
 } :
-    (memory::dims) {
+    memory::dims {
         1, 1, 1, N
     };
 
@@ -1233,12 +1222,7 @@ void zenBatchMatMul(bool Layout, bool TransA, bool TransB, int *M_Array,
     zenEnvObj.zenConvAlgo = zenConvAlgoType::GEMM;
 
     // prologue code for time profiling of this kernel
-#ifdef _WIN32
     auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
 
     std::vector<CBLAS_TRANSPOSE> TransA_Array(
         group_count, TransA ? CblasTrans : CblasNoTrans);
@@ -1299,15 +1283,9 @@ void zenBatchMatMul(bool Layout, bool TransA, bool TransB, int *M_Array,
 
 #endif
     // Code for time profiling of this kernel
-    float elapsed;
-#ifdef _WIN32
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> difference = end - start;
-    elapsed = difference.count();
-#else
-    gettimeofday(&end, 0);
-    elapsed = timedifference_msec(start, end);
-#endif
+    float elapsed = difference.count();
 
     zendnnVerbose(ZENDNN_PROFLOG, "zenBatchMatMul, Layout=",
                   Layout ? "CblasRowMajor" : "CblasColMajor",

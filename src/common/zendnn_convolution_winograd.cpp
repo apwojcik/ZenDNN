@@ -188,7 +188,7 @@ void input_transform_2x2_3x3(zendnnEnv zenEnvObj, const float *input,
         //equivalent to stride 2
         for (h = -pad_t; h < (height + pad_b)-3; h+=2) {
             for (w = -pad_l; w < (width + pad_r)-3; w+=2) {
-                float x[4][4][num_channels];
+                std::vector<std::array<std::array<float, 4>, 4>> x(num_channels);
                 float BTx[4][4][8];
                 int th = h + pad_t;
                 int tw = w + pad_l;

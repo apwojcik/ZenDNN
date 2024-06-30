@@ -191,12 +191,7 @@ void maxPoolingRef(
 ) {
     zendnnEnv zenEnvObj = readEnv();
 
-#ifdef _WIN32
     auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
 
     maxPoolingRefV1(zenEnvObj, input, number_of_images, number_of_channel, height,
                     width, kernel_height,
@@ -211,15 +206,9 @@ void maxPoolingRef(
                     data_format // 1 for NCHW and 0 for NHWC
                    );
 
-    float elapsed;
-#ifdef _WIN32
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> difference = end - start;
-    elapsed = difference.count();
-#else
-    gettimeofday(&end, 0);
-    elapsed = timedifference_msec(start, end);
-#endif
+    float elapsed = difference.count();
     zendnnVerbose(ZENDNN_PROFLOG, "ZENDNN MaxPool profile, no_of_images=",
                number_of_images,
                " channels=", number_of_channel, " height=", height, " width=", width,

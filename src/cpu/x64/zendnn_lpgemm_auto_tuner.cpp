@@ -216,11 +216,7 @@ int auto_compute_conv_v1(
         if (found_obj == conv_kernel_map1_helper.end()) {
 
             //Time start
-#ifdef _WIN32
             auto start_n = std::chrono::high_resolution_clock::now();
-#else
-            gettimeofday(&start_n, 0);
-#endif
 
             zendnnConvolutionLPGEMM(supportedPath, selected_algo,in_layer,
                                     no_of_images, channels, height, width, filter, no_of_filter, kernel_h, kernel_w,
@@ -229,15 +225,9 @@ int auto_compute_conv_v1(
                                     output_scales,
                                     zero_point_dst, scale_count);
             //Time end
-#ifdef _WIN32
             auto end_n = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> difference = end_n - start_n;
             cur_algo_time = difference.count();
-#else
-            gettimeofday(&end_n, 0);
-            cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f +
-                            (end_n.tv_usec - start_n.tv_usec)/ 1000.0f; //time in milliseconds
-#endif
 
             //Create new entry
             conv_kernel_map[key_obj] = supportedPath == 0 ? static_cast<int>
@@ -277,11 +267,7 @@ int auto_compute_conv_v1(
         std::get<0>(found_obj->second) += 1;
 
         //timer start
-#ifdef _WIN32
         auto start_n = std::chrono::high_resolution_clock::now();
-#else
-        gettimeofday(&start_n, 0);
-#endif
 
         zendnnConvolutionLPGEMM(supportedPath, selected_algo,in_layer,
                                 no_of_images, channels, height, width, filter, no_of_filter, kernel_h, kernel_w,
@@ -291,15 +277,9 @@ int auto_compute_conv_v1(
                                 zero_point_dst, scale_count);
 
         //timer end
-#ifdef _WIN32
         auto end_n = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> difference = end_n - start_n;
         cur_algo_time = difference.count();
-#else
-        gettimeofday(&end_n, 0);
-        cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f +
-                        (end_n.tv_usec - start_n.tv_usec)/ 1000.0f; //time in milliseconds
-#endif
 
         //If current run gives better timing then update
         if (cur_algo_time < std::get<1>(found_obj->second)) {
@@ -388,11 +368,7 @@ int auto_compute_conv_v2(
         //If Key not found in map then time the algo and add new element to map
         if (found_obj == conv_kernel_map2_helper.end()) {
             //Time start
-#ifdef _WIN32
             auto start_n = std::chrono::high_resolution_clock::now();
-#else
-            gettimeofday(&start_n, 0);
-#endif
 
             zendnnConvolutionLPGEMM(supportedPath, selected_algo,in_layer,
                                     no_of_images, channels, height, width, filter, no_of_filter, kernel_h, kernel_w,
@@ -402,15 +378,9 @@ int auto_compute_conv_v2(
                                     zero_point_dst, scale_count);
 
             //Time end
-#ifdef _WIN32
             auto end_n = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> difference = end_n - start_n;
             cur_algo_time = difference.count();
-#else
-            gettimeofday(&end_n, 0);
-            cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f +
-                            (end_n.tv_usec - start_n.tv_usec) / 1000.0f; //time in milliseconds
-#endif
 
             //Create new entry
             //initial vector for average time and iteration count for each algorithms.
@@ -449,11 +419,7 @@ int auto_compute_conv_v2(
         selected_algo = ((graph_exe_count-skip_iteration)%num_of_lpgemm_algo) +1;
 
         //timer start
-#ifdef _WIN32
         auto start_n = std::chrono::high_resolution_clock::now();
-#else
-        gettimeofday(&start_n, 0);
-#endif
 
         zendnnConvolutionLPGEMM(supportedPath, selected_algo,in_layer,
                                 no_of_images, channels, height, width, filter, no_of_filter, kernel_h, kernel_w,
@@ -463,15 +429,9 @@ int auto_compute_conv_v2(
                                 zero_point_dst, scale_count);
 
         //timer end
-#ifdef _WIN32
         auto end_n = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> difference = end_n - start_n;
         cur_algo_time = difference.count();
-#else
-        gettimeofday(&end_n, 0);
-        cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f +
-                        (end_n.tv_usec - start_n.tv_usec) / 1000.0f; //time in milliseconds
-#endif
 
         //Finding the current algorithm's average time and iteration stored in Map
         float t_algo =
@@ -575,11 +535,7 @@ int auto_compute_conv_v3(
         if (found_obj == conv_kernel_map1_helper.end()) {
 
             //Time start
-#ifdef _WIN32
             auto start_n = std::chrono::high_resolution_clock::now();
-#else
-            gettimeofday(&start_n, 0);
-#endif
             zendnnConvolutionLPGEMM(supportedPath, selected_algo,in_layer,
                                     no_of_images, channels, height, width, filter, no_of_filter, kernel_h, kernel_w,
                                     pad_t, pad_l, pad_b, pad_r, stride_h, stride_w, bias, out_layer, out_height,
@@ -588,15 +544,9 @@ int auto_compute_conv_v3(
                                     zero_point_dst, scale_count);
 
             //Time end
-#ifdef _WIN32
             auto end_n = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double, std::milli> difference = end_n - start_n;
             cur_algo_time = difference.count();
-#else
-            gettimeofday(&end_n, 0);
-            cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f
-                            + (end_n.tv_usec - start_n.tv_usec)/1000.0f; //time in milliseconds
-#endif
 
             //Create new entry
             conv_kernel_map1_helper[key_obj] = {1, cur_algo_time, supportedPath == 0 ? static_cast<int>(convolution_os8::convolution_gemm_u8s8s32os8) :static_cast<int>(convolution_os32::convolution_gemm_u8s8s32os32)}; // {iter_count, time, algo}
@@ -634,11 +584,7 @@ int auto_compute_conv_v3(
         selected_algo = (std::get<0>(found_obj->second)%num_of_lpgemm_algo) +1;
         std::get<0>(found_obj->second) += 1;
         //timer start
-#ifdef _WIN32
         auto start_n = std::chrono::high_resolution_clock::now();
-#else
-        gettimeofday(&start_n, 0);
-#endif
 
         zendnnConvolutionLPGEMM(supportedPath, selected_algo,in_layer,
                                 no_of_images, channels, height, width, filter, no_of_filter, kernel_h, kernel_w,
@@ -648,15 +594,9 @@ int auto_compute_conv_v3(
                                 zero_point_dst, scale_count);
 
         //timer end
-#ifdef _WIN32
         auto end_n = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> difference = end_n - start_n;
         cur_algo_time = difference.count();
-#else
-        gettimeofday(&end_n, 0);
-        cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f +
-                        (end_n.tv_usec - start_n.tv_usec)/ 1000.0f; //time in milliseconds
-#endif
 
         //If current run gives better timing then update
         if (cur_algo_time < std::get<1>(found_obj->second)) {

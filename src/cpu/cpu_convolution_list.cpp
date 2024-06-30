@@ -88,7 +88,9 @@ using namespace zendnn::impl::prop_kind;
 
 // clang-format off
 const std::map<pk_dt_impl_key_t, std::vector<impl_list_item_t>> &impl_list_map() {
-    static const std::map<pk_dt_impl_key_t, std::vector<impl_list_item_t>> the_map = REG_CONV_P({
+    static const std::map<pk_dt_impl_key_t, std::vector<impl_list_item_t>> the_map =
+#if BUILD_PRIMITIVE_ALL || BUILD_CONVOLUTION || BUILD_DECONVOLUTION
+    {
         // FWD fp
         {{forward, f32, f32, f32}, {
 #ifdef ENABLE_CK
@@ -514,7 +516,10 @@ const std::map<pk_dt_impl_key_t, std::vector<impl_list_item_t>> &impl_list_map()
             CPU_INSTANCE(ref_convolution_int8_bwd_data_t)
             nullptr,
         })},
-    });
+    };
+#else // BUILD_PRIMITIVE_ALL || BUILD_DECONVOLUTION
+    {};
+#endif // BUILD_PRIMITIVE_ALL || BUILD_DECONVOLUTION
     return the_map;
 }
 // clang-format on

@@ -1136,28 +1136,16 @@ void zenConvolution2DgemmRef(
     //In future this will be part of zendnn initialization
     zendnnEnv zenEnvObj = readEnv();
 
-#ifdef _WIN32
     auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
-
 
     zenConvolution2DbaseRef(zenEnvObj, in_layer, batchsize, channels, height, width,
                             filter, no_of_filter,
                             kernel_h, kernel_w, pad_t, pad_l, pad_b, pad_r, stride_h, stride_w, bias,
                             out_layer, out_height, out_width, relu, scale);
 
-float elapsed;
-#ifdef _WIN32
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> difference = end - start;
-    elapsed = difference.count();
-#else
-    gettimeofday(&end, 0);
-    elapsed = timedifference_msec(start, end);
-#endif
+    float elapsed = difference.count();
     zendnnVerbose(ZENDNN_PROFLOG, "zenConvolution2DbaseRef, no_of_images=", batchsize,
                " channels=", channels, " height=", height, " width=", width,
                " no_of_filter=", no_of_filter, " kernel_h=", kernel_h, " kernel_w=", kernel_w,

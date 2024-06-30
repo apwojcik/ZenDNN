@@ -805,7 +805,6 @@ int auto_compute_matmul_bf16(
     key_obj_auto.thread_count = zenEnvObj.omp_num_threads;
 
     float cur_algo_time; //current algorithm's execution time
-    struct timeval start_n, end_n;
 
     //Number of iterations to run without creating map for each unique layer.
     unsigned int skip_iteration =
@@ -833,11 +832,7 @@ int auto_compute_matmul_bf16(
         if (found_obj == matmul_kernel_map_bf16_helper.end()) {
 
             //Time start
-#ifdef _WIN32
-            auto start_n = std::chrono::high_resolution_clock::now();
-#else
-            gettimeofday(&start_n, 0);
-#endif
+            auto start_n = high_resolution_clock::now();
 
             matmul_bf16_wrapper(zenEnvObj, dst_type, bias_type, Layout, transpose_input,
                                 transpose_filter,
@@ -845,15 +840,9 @@ int auto_compute_matmul_bf16(
                                 geluType, beta, dst, ldc, output_scales, scale_size);
 
             //Time end
-#ifdef _WIN32
-            auto end_n = std::chrono::high_resolution_clock::now();
+            auto end_n = high_resolution_clock::now();
             std::chrono::duration<double, std::milli> difference = end_n - start_n;
             cur_algo_time = difference.count();
-#else
-            gettimeofday(&end_n, 0);
-            cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f
-                            + (end_n.tv_usec - start_n.tv_usec)/1000.0f; //time in milliseconds
-#endif
 
             //Create new entry
             matmul_kernel_map_bf16_helper[key_obj_auto] = {1, cur_algo_time, zenBF16MatMulAlgoType::MATMUL_AOCL_GEMM}; // {iter_count, time, algo}
@@ -888,11 +877,7 @@ int auto_compute_matmul_bf16(
         zenEnvObj.zenBF16GEMMalgo = (std::get<0>(found_obj->second)%NUM_BF16_ALGO) +1;
         std::get<0>(found_obj->second) += 1;
         //timer start
-#ifdef _WIN32
         auto start_n = std::chrono::high_resolution_clock::now();
-#else
-        gettimeofday(&start_n, 0);
-#endif
 
         matmul_bf16_wrapper(zenEnvObj, dst_type, bias_type, Layout, transpose_input,
                             transpose_filter,
@@ -900,15 +885,9 @@ int auto_compute_matmul_bf16(
                             geluType, beta, dst, ldc, output_scales, scale_size);
 
         //timer end
-#ifdef _WIN32
         auto end_n = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> difference = end_n - start_n;
         cur_algo_time = difference.count();
-#else
-        gettimeofday(&end_n, 0);
-        cur_algo_time = (end_n.tv_sec - start_n.tv_sec) * 1000.0f +
-                        (end_n.tv_usec - start_n.tv_usec)/ 1000.0f; //time in milliseconds
-#endif
         zendnnVerbose(ZENDNN_PROFLOG,"AutoTuner BF16 Evaluate Iteration algo:",
                       zenEnvObj.zenBF16GEMMalgo, " time:",cur_algo_time);
         //If current run gives better timing then update

@@ -21,6 +21,19 @@ if(OpenMP_cmake_included)
     return()
 endif()
 set(OpenMP_cmake_included true)
+
+if(MSVC)
+    # By default MSVC C/C++ compiler supports the OpenMP 2.0 standard. Starting
+    # from version 17.7 the compiler offers an experimental support for the OpenMP 5.2 standard.
+    # To switch to the experimental OpenMP runtime we need to use CMake variable witch
+    # has been since CMake version 3.30.
+    cmake_minimum_required(VERSION 3.30)
+    if(MSVC_VERSION LESS 1937)
+        message(FATAL_ERROR "Required at least Visual Studio 2022 version 17.7 for "
+                            "the experimental OpenMP 5.2 support.")
+    endif()
+endif()
+
 include("cmake/Threading.cmake")
 
 if (APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -66,6 +79,9 @@ if(ZENDNN_DPCPP_HOST_COMPILER STREQUAL "DEFAULT")
     set(_omp_original_cmake_cxx_flags "${CMAKE_CXX_FLAGS}")
     string(REGEX REPLACE "-fsycl" "-fno-sycl" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
+    if(MSVC)
+        set(OpenMP_RUNTIME_MSVC "experimental" CACHE INTERNAL "" FORCE)
+    endif()
     find_package(OpenMP)
     set_openmp_values_for_old_cmake()
 

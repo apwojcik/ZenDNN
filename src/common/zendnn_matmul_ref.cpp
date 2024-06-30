@@ -135,12 +135,7 @@ void zenMatMul_refWrapper(
     const int ldc
 ) {
      // prologue code for time profiling of this kernel
-#ifdef _WIN32
     auto start = std::chrono::high_resolution_clock::now();
-#else
-    struct timeval start, end;
-    gettimeofday(&start, 0);
-#endif
 
     if (true == Layout) { //CblasRowMajor
         for (int i=0; i<MB; ++i) {
@@ -157,15 +152,9 @@ void zenMatMul_refWrapper(
     }
 
     // Code for time profiling of this kernel
-    float elapsed;
-#ifdef _WIN32
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> difference = end - start;
-    elapsed = difference.count();
-#else
-    gettimeofday(&end, 0);
-    elapsed = timedifference_msec(start, end);
-#endif
+    float elapsed = difference.count();
     zendnnVerbose(ZENDNN_PROFLOG, "zenMatMul_ref, Layout=CblasRowMajor,",
                " transa=", transpose_input ? "CblasTrans" : "CblasNoTrans",
                " transb=", transpose_filter ? "CblasTrans" : "CblasNoTrans",

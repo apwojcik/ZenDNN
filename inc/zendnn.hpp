@@ -736,9 +736,8 @@ enum class algorithm {
     groupedquery_attention  = zendnn_groupedquery_attention,
 };
 
-class zendnn_custom_op {
+struct ZENDNN_API zendnn_custom_op {
 
-  public:
 //Embedding bag op API
     static void zendnn_embedding_bag(const memory &z_input,
                                      const memory &z_indices,

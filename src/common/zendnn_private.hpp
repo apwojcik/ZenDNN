@@ -24,6 +24,10 @@
 #include "zendnn_helper.hpp"
 #include "zendnn_utils.hpp"
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
+
 #ifndef ZENDNN_PRIVATE_HPP
 #define ZENDNN_PRIVATE_HPP
 
@@ -104,6 +108,15 @@ struct hash<Key_matmul> {
 //Makes use of inline assembly
 inline int getCpuID_brandString(int *a) {
 
+#ifdef _MSC_VER
+    std::array<int, 4> regs;
+    __cpuid(regs.data(), 0x80000002);
+    std::memcpy(a + 0, regs.data(), 4 * sizeof(int));
+    __cpuid(regs.data(), 0x80000003);
+    std::memcpy(a + 4, regs.data(), 4 * sizeof(int));
+    __cpuid(regs.data(), 0x80000003);
+    std::memcpy(a + 4, regs.data(), 4 * sizeof(int));
+#else
     __asm__ __volatile__("xor %eax , %eax\n\t");
     __asm__ __volatile__("xor %ebx , %ebx\n\t");
     __asm__ __volatile__("xor %ecx , %ecx\n\t");
@@ -130,6 +143,7 @@ inline int getCpuID_brandString(int *a) {
     __asm__ __volatile__("mov %%ebx, %0\n\t":"=r"(a[9]));
     __asm__ __volatile__("mov %%ecx, %0\n\t":"=r"(a[10]));
     __asm__ __volatile__("mov %%edx, %0\n\t":"=r"(a[11]));
+#endif
     return 0;
 }
 

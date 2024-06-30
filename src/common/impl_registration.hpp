@@ -64,23 +64,10 @@
     { nullptr }
 #endif
 
-#if BUILD_PRIMITIVE_ALL || BUILD_CONVOLUTION
-#define REG_CONV_P(...) __VA_ARGS__
-#else
-#define REG_CONV_P(...) \
-    {}
-#endif
-
 #if BUILD_PRIMITIVE_ALL || BUILD_DECONVOLUTION
 #define REG_DECONV_P(...) __VA_ARGS__
 // This case is special, it requires handling of convolution_bwd_d internally
 // since major optimizations are based on convolution implementations.
-#ifndef REG_CONV_P
-#error "REG_CONV_P is not defined. Check that convolution is defined prior deconvolution."
-#else
-#undef REG_CONV_P
-#define REG_CONV_P(...) __VA_ARGS__
-#endif
 
 #ifndef REG_BWD_D_PK
 #error "REG_BWD_D_PK is not defined. Dedicated macro was not enabled."
@@ -190,13 +177,6 @@
 #else
 #define REG_SUM_P(...) \
     { nullptr }
-#endif
-
-#if BUILD_PRIMITIVE_ALL || BUILD_EMBEDDING_BAG
-#define REG_EMBEDDING_BAG_P(...) __VA_ARGS__
-#else
-#define REG_EMBEDDING_BAG_P(...) \
-    {}
 #endif
 
 #if BUILD_PRIMITIVE_ALL || BUILD_ATTENTION
